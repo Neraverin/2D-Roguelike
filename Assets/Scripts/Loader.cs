@@ -1,15 +1,17 @@
 ﻿using UnityEngine;
 
-public class Loader : MonoBehaviour 
+namespace Assets.Scripts
 {
-
-    public GameObject GameManager;
-
-    void Awake () 
+    public class Loader : MonoBehaviour 
     {
-        if (global::GameManager.Instance == null)
+        public GameObject GameManager;
+
+        void Awake () 
         {
-            Instantiate(GameManager);
+            if (global::Assets.Scripts.GameManager.Instance == null)
+            {
+                Instantiate(GameManager);
+            }
         }
     }
 }

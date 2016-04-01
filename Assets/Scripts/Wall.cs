@@ -1,30 +1,32 @@
 ﻿using UnityEngine;
 
-public class Wall : MonoBehaviour
+namespace Assets.Scripts
 {
-    public Sprite DamageSprite;
-    public int Hp = 4;
-
-    public AudioClip ChopClip1;
-    public AudioClip ChopClip2;
-
-    // Use this for initialization
-    void Awake ()
+    public class Wall : MonoBehaviour
     {
-        _spriteRenderer = GetComponent<SpriteRenderer>();
-    }
+        public Sprite DamageSprite;
+        public int Hp = 4;
 
-    public void DamageWall(int loss)
-    {
-        _spriteRenderer.sprite = DamageSprite;
-        Hp -= loss;
-        SoundManager.Instance.RandomizeSfx(ChopClip1, ChopClip2);
+        public AudioClip ChopClip1;
+        public AudioClip ChopClip2;
 
-        if (Hp <= 0)
+        void Awake ()
         {
-            gameObject.SetActive(false);
+            _spriteRenderer = GetComponent<SpriteRenderer>();
         }
-    }
 
-    private SpriteRenderer _spriteRenderer;
-}
+        public void DamageWall(int loss)
+        {
+            _spriteRenderer.sprite = DamageSprite;
+            SoundManager.Instance.RandomizeSfx(ChopClip1, ChopClip2);
+
+            Hp -= loss;
+            if (Hp <= 0)
+            {
+                gameObject.SetActive(false);
+            }
+        }
+
+        private SpriteRenderer _spriteRenderer;
+    }
+} // namespace

@@ -1,59 +1,61 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class Enemy : MovingObject
+namespace Assets.Scripts
 {
-    public int PlayerDamage;
-
-    public AudioClip enemyAttack1;
-    public AudioClip enemyAttack2;
-
-    protected override void Start ()
+    public class Enemy : MovingObject
     {
-        GameManager.Instance.AddEnemiesToList(this);
-        _animator = GetComponent<Animator>();
-        _target = GameObject.FindGameObjectWithTag("Player").transform;
+        public int PlayerDamage;
 
-        base.Start();
-    }
+        public AudioClip enemyAttack1;
+        public AudioClip enemyAttack2;
 
-    protected override void AttemptMove<T>(int xDir, int yDir)
-    {
-        if (_skipMove)
+        protected override void Start ()
         {
-            _skipMove = false;
-            return;
-        }
-        base.AttemptMove<T>(xDir, yDir);
+            GameManager.Instance.AddEnemiesToList(this);
+            _animator = GetComponent<Animator>();
+            _target = GameObject.FindGameObjectWithTag("Player").transform;
 
-        _skipMove = true;
-    }
-
-    protected override void OnCantMove<T>(T component)
-    {
-        var hitPlayer = component as Player;
-        _animator.SetTrigger("enemyAttack");
-        SoundManager.Instance.RandomizeSfx(enemyAttack1, enemyAttack2);
-        hitPlayer.LostFood(PlayerDamage);
-    }
-
-    public void MoveEnemy()
-    {
-        var xDir = 0;
-        var yDir = 0;
-        if (Mathf.Abs(_target.position.x - transform.position.x) > float.Epsilon)
-        {
-            yDir = _target.position.y > transform.position.y ? 1 : -1;
-        }
-        else
-        {
-            xDir = _target.position.x > transform.position.x ? 1 : -1;
+            base.Start();
         }
 
-        AttemptMove<Player>(xDir, yDir);
-    }
+        protected override void AttemptMove<T>(int xDir, int yDir)
+        {
+            if (_skipMove)
+            {
+                _skipMove = false;
+                return;
+            }
+            base.AttemptMove<T>(xDir, yDir);
 
-    private Animator _animator;
-    private Transform _target;
-    private bool _skipMove;
+            _skipMove = true;
+        }
+
+        protected override void OnCantMove<T>(T component)
+        {
+            var hitPlayer = component as Player;
+            _animator.SetTrigger("enemyAttack");
+            SoundManager.Instance.RandomizeSfx(enemyAttack1, enemyAttack2);
+            hitPlayer.LostFood(PlayerDamage);
+        }
+
+        public void MoveEnemy()
+        {
+            var xDir = 0;
+            var yDir = 0;
+            if (Mathf.Abs(_target.position.x - transform.position.x) > float.Epsilon)
+            {
+                xDir = _target.position.x > transform.position.x ? 1 : -1;
+            }
+            else
+            {
+                yDir = _target.position.y > transform.position.y ? 1 : -1;
+            }
+
+            AttemptMove<Player>(xDir, yDir);
+        }
+
+        private Animator _animator;
+        private Transform _target;
+        private bool _skipMove;
+    }
 }

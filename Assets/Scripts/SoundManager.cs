@@ -1,45 +1,45 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class SoundManager : MonoBehaviour
+namespace Assets.Scripts
 {
-    public AudioSource EfxSource;
-    public AudioSource MusicSource;
-
-    public static SoundManager Instance = null;
-
-    public float LowPitchRange = 0.95f;
-    public float HighPitchRange = 1.05f;
-
-
-    void Awake ()
+    public class SoundManager : MonoBehaviour
     {
-        if (Instance == null)
+        public AudioSource EfxSource;
+        public AudioSource MusicSource;
+
+        public static SoundManager Instance;
+
+        public float LowPitchRange = 0.95f;
+        public float HighPitchRange = 1.05f;
+
+        void Awake ()
         {
-            Instance = this;
+            if (Instance == null)
+            {
+                Instance = this;
+            }
+            else if (Instance != this)
+            {
+                Destroy(gameObject);
+            }
+
+            DontDestroyOnLoad(gameObject);
         }
-        else if (Instance != this)
+
+        public void PlaySingle(AudioClip clip)
         {
-            Destroy(gameObject);
+            EfxSource.clip = clip;
+            EfxSource.Play();
         }
 
-        DontDestroyOnLoad(gameObject);
+        public void RandomizeSfx(params AudioClip[] clips)
+        {
+            var randomIndex = Random.Range(0, clips.Length);
+            var randomPitch = Random.Range(LowPitchRange, HighPitchRange);
+
+            EfxSource.pitch = randomPitch;
+            PlaySingle(clips[randomIndex]);
+        }
+
     }
-
-    public void PlaySingle(AudioClip clip)
-    {
-        EfxSource.clip = clip;
-        EfxSource.Play();
-    }
-
-    public void RandomizeSfx(params AudioClip[] clips)
-    {
-        var randomIndex = Random.Range(0, clips.Length);
-        var randomPitch = Random.Range(LowPitchRange, HighPitchRange);
-
-        EfxSource.pitch = randomPitch;
-        EfxSource.clip = clips[randomIndex];
-        EfxSource.Play();
-    }
-
-}
+} // namespace
