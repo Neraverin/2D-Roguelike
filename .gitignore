@@ -18,6 +18,9 @@ ExportedObj/
 *.booproj
 *.svd
 
-
 # Unity3D Generated File On Crash Reports
 sysinfo.txt
+
+# Game Installer
+2D-Roguelike_setup.exe
+

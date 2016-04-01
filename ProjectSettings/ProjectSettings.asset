@@ -9,7 +9,7 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: DefaultCompany
+  companyName: Neraverin's Games
   productName: 2DRoguelike
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
@@ -333,7 +333,8 @@ PlayerSettings:
   psp2InfoBarColor: 0
   psmSplashimage: {fileID: 0}
   spritePackerPolicy: 
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    2: 
   metroPackageName: 2DRoguelike
   metroPackageVersion: 
   metroCertificatePath: 
