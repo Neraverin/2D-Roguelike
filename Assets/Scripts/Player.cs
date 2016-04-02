@@ -48,8 +48,8 @@ namespace Assets.Scripts
 
         private void DoEveryTurnActions()
         {
-            _food--;
-            FoodText.text = "Food: " + _food;
+            _hp--;
+            UpdateHealthPoints();
             GameManager.Instance.PlayerTurn = false;
             CheckIfGameOver();
         }
@@ -67,9 +67,11 @@ namespace Assets.Scripts
         {
             _animator = GetComponent<Animator>();
 
-            _food = GameManager.Instance.PlayerFoodPoints;
+            _healthBar = GetComponent<HealthBarController>();
+            _healthBar.SetMaxHealth(_startHealth);
 
-            FoodText.text = "Food: " + _food;
+            _hp = GameManager.Instance.PlayerHealthPoints;
+            UpdateHealthPoints();
         
             base.Start();
         }
@@ -119,15 +121,15 @@ namespace Assets.Scripts
         {
             _animator.SetTrigger("playerHit");
 
-            _food -= loss;
-            FoodText.text = "-" + loss + " Food:" + _food;
+            _hp -= loss;
+            UpdateHealthPoints();
 
             CheckIfGameOver();
         }
 
         private void CheckIfGameOver()
         {
-            if (_food > 0) return;
+            if (_hp > 0) return;
             SoundManager.Instance.PlaySingle(GameOverClip);
             SoundManager.Instance.MusicSource.Stop();
             GameManager.Instance.GameOver();
@@ -139,20 +141,21 @@ namespace Assets.Scripts
         {
             if (other.tag == "Exit")
             {
+                GameManager.Instance.PlayerHealthPoints = _hp;
                 Invoke("Restart", _restartLevelDelay);
                 enabled = false;
             }
             if (other.tag == "Food")
             {
-                _food += PointsForFood;
-                FoodText.text = "+" + PointsForFood + " Food:" + _food;
+                _hp += PointsForFood;
+                UpdateHealthPoints();
                 SoundManager.Instance.RandomizeSfx(EatClip1, EatClip2);
                 other.gameObject.SetActive(false);
             }
             if (other.tag == "Soda")
             {
-                _food += _pointsForSoda;
-                FoodText.text = "+" + _pointsForSoda + " Food:" + _food;
+                _hp += _pointsForSoda;
+                UpdateHealthPoints();
                 SoundManager.Instance.RandomizeSfx(DrinkClip1, DrinkClip2);
                 other.gameObject.SetActive(false);
             }
@@ -160,7 +163,7 @@ namespace Assets.Scripts
 
         private void OnDisable()
         {
-            GameManager.Instance.PlayerFoodPoints = _food;
+            GameManager.Instance.PlayerHealthPoints = _hp;
         }
 
         private void Restart()
@@ -203,13 +206,21 @@ namespace Assets.Scripts
             }
             return vertical;
         }
+
+        private void UpdateHealthPoints()
+        {
+            FoodText.text = " Food:" + _hp;
+            _healthBar.SetHealth(_hp);
+        }
         #endregion // Private Methods
 
         #region Fields
         private Animator _animator;
-        private int _food;
+        private int _hp;
         private int _pointsForFood = 10;
         private int _pointsForSoda = 20;
+        private int _startHealth = 100;
+        private HealthBarController _healthBar;
 
         private float _restartLevelDelay = 1f;
         #endregion // Fields

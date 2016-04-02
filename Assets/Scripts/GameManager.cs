@@ -11,7 +11,7 @@ namespace Assets.Scripts
 
         public BoardManager BoardScript;
 
-        public int PlayerFoodPoints = 100;
+        public int PlayerHealthPoints = 100;
 
         public float TurnDelay = 0.1f;
 
