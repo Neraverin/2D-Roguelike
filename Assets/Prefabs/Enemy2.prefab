@@ -98,6 +98,8 @@ MonoBehaviour:
   PlayerDamage: 20
   enemyAttack1: {fileID: 8300000, guid: 0db8cac2749584a009540aa5671ee80d, type: 3}
   enemyAttack2: {fileID: 8300000, guid: 114514a3b3697484ebaa08f7fbf842d3, type: 3}
+  Attacked1: {fileID: 8300000, guid: 9d1b8c3c4a1a71a40a6becc8caaf1ec9, type: 3}
+  Attacked2: {fileID: 8300000, guid: 499942a0150294740a82700d7c8e2ceb, type: 3}
 --- !u!212 &21228882
 SpriteRenderer:
   m_ObjectHideFlags: 1
