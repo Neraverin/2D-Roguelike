@@ -5,15 +5,6 @@ namespace Assets.Scripts
 {
     public class Player : MovingObject
     {
-        public int WallDamage = 1;
-
-        public int PointsForFood = 10;
-        public int PointsForSoda = 20;
-
-        public float RestartLevelDelay = 1f;
-
-        public Text FoodText;
-
         public AudioClip MoveClip1;
         public AudioClip MoveClip2;
         public AudioClip EatClip1;
@@ -22,8 +13,10 @@ namespace Assets.Scripts
         public AudioClip DrinkClip2;
         public AudioClip GameOverClip;
 
-        // Use this for initialization
-        protected  override void Start ()
+        public Text FoodText;
+
+        #region override MovingObject
+        protected override void Start ()
         {
             _animator = GetComponent<Animator>();
 
@@ -53,47 +46,61 @@ namespace Assets.Scripts
             GameManager.Instance.PlayerTurn = false;
         }
 
-        private void OnDisable()
+        protected override void OnCantMove<T>(T component)
         {
-            GameManager.Instance.PlayerFoodPoints = _food;
+            var hitWall = component as Wall;
+            hitWall.DamageWall(1);
+
+            _animator.SetTrigger("playerChop");
         }
-    
-        void Update ()
+
+        #endregion // override MovingObject
+
+        #region Proprties
+
+        public int PointsForFood
+        {
+            get { return _pointsForFood; }
+            set { _pointsForFood = value; }
+        }
+
+        public int PointsForSoda
+        {
+            get { return _pointsForSoda; }
+            set { _pointsForSoda = value; }
+        }
+
+        public float RestartLevelDelay
+        {
+            get { return _restartLevelDelay; }
+            set { _restartLevelDelay = value; }
+        }
+        
+        #endregion // Properties
+
+        #region Unity Methods
+
+        void Update()
         {
             if (!GameManager.Instance.PlayerTurn)
             {
                 return;
             }
-
             var horizontal = 0;
             var vertical = 0;
 
-            horizontal = (int) Input.GetAxisRaw("Horizontal");
-            vertical = (int) Input.GetAxisRaw("Vertical");
-
-            if (horizontal != 0)
-            {
-                vertical = 0;
-            }
-
+            horizontal = GetHorizontalDirection();
+            vertical = GetVerticalDirection();
+            
             if (horizontal != 0 || vertical != 0)
             {
                 AttemptMove<Wall>(horizontal, vertical);
             }
         }
 
-        protected override void OnCantMove<T>(T component)
-        {
-            var hitWall = component as Wall;
-            hitWall.DamageWall(WallDamage);
+        #endregion // Unity Methods
 
-            _animator.SetTrigger("playerChop");
-        }
-
-        private void Restart()
-        {
-            Application.LoadLevel(Application.loadedLevel);
-        }
+        #region Pubilc Methods
 
         public void LostFood(int loss)
         {
@@ -113,30 +120,90 @@ namespace Assets.Scripts
             GameManager.Instance.GameOver();
         }
 
+        #endregion // Public Methods
+
+        #region Private Methods
+
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (other.tag == "Exit")
             {
-                Invoke("Restart", RestartLevelDelay);
+                Invoke("Restart", _restartLevelDelay);
                 enabled = false;
             }
             if (other.tag == "Food")
             {
                 _food += PointsForFood;
-                FoodText.text =  "+" + PointsForFood + " Food:" + _food;
+                FoodText.text = "+" + PointsForFood + " Food:" + _food;
                 SoundManager.Instance.RandomizeSfx(EatClip1, EatClip2);
                 other.gameObject.SetActive(false);
             }
             if (other.tag == "Soda")
             {
-                _food += PointsForSoda;
-                FoodText.text = "+" + PointsForSoda + " Food:" + _food;
+                _food += _pointsForSoda;
+                FoodText.text = "+" + _pointsForSoda + " Food:" + _food;
                 SoundManager.Instance.RandomizeSfx(DrinkClip1, DrinkClip2);
                 other.gameObject.SetActive(false);
             }
         }
 
+        private void OnDisable()
+        {
+            GameManager.Instance.PlayerFoodPoints = _food;
+        }
+
+        private void Restart()
+        {
+            Application.LoadLevel(Application.loadedLevel);
+        }
+
+        private int GetHorizontalDirection()
+        {
+            var horizontal = 0;
+            if ((int)Input.GetAxisRaw("Horizontal") > 0 ||
+                (int)Input.GetAxisRaw("UpAndRight") > 0 ||
+                (int)Input.GetAxisRaw("UpAndLeft") < 0)
+            {
+                horizontal = 1;
+            }
+            if ((int)Input.GetAxisRaw("Horizontal") < 0 ||
+                (int)Input.GetAxisRaw("UpAndLeft") > 0 ||
+                (int)Input.GetAxisRaw("UpAndRight") < 0)
+            {
+                horizontal = -1;
+            }
+            return horizontal;
+        }
+
+        private int GetVerticalDirection()
+        {
+            var vertical = 0;
+            if ((int)Input.GetAxisRaw("Vertical") > 0 ||
+                (int)Input.GetAxisRaw("UpAndRight") > 0 ||
+                (int)Input.GetAxisRaw("UpAndLeft") > 0)
+            {
+                vertical = 1;
+            }
+            if ((int)Input.GetAxisRaw("Vertical") < 0 ||
+                (int)Input.GetAxisRaw("UpAndRight") < 0 ||
+                (int)Input.GetAxisRaw("UpAndLeft") < 0)
+            {
+                vertical = -1;
+            }
+            return vertical;
+        }
+
+        #endregion // Private Methods
+
+        #region Fields
+
         private Animator _animator;
         private int _food;
+        private int _pointsForFood = 10;
+        private int _pointsForSoda = 20;
+
+        private float _restartLevelDelay = 1f;
+
+        #endregion // Fields
     }
 }
