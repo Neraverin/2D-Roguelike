@@ -19,7 +19,7 @@ namespace Assets.Scripts
             _inverseMoveTime = 1 / MoveTime;
         }
 
-        protected bool Move (int xDir, int yDir, out RaycastHit2D hit)
+        protected virtual bool Move (int xDir, int yDir, out RaycastHit2D hit)
         {
             Vector2 start = transform.position;
             var end = start + new Vector2(xDir, yDir);

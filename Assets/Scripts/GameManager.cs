@@ -73,7 +73,10 @@ namespace Assets.Scripts
             }
             foreach (var enemy in _enemies)
             {
-                enemy.MoveEnemy();
+                if (enemy.isActiveAndEnabled)
+                {
+                    enemy.MoveEnemy();
+                }
                 yield return new WaitForSeconds(enemy.MoveTime);
             }
 

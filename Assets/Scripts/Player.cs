@@ -5,6 +5,7 @@ namespace Assets.Scripts
 {
     public class Player : MovingObject
     {
+        #region Unity Inspector
         public AudioClip MoveClip1;
         public AudioClip MoveClip2;
         public AudioClip EatClip1;
@@ -14,65 +15,9 @@ namespace Assets.Scripts
         public AudioClip GameOverClip;
 
         public Text FoodText;
-
-        #region override MovingObject
-        protected override void Start ()
-        {
-            _animator = GetComponent<Animator>();
-
-            _food = GameManager.Instance.PlayerFoodPoints;
-
-            FoodText.text = "Food: " + _food;
-        
-            base.Start();
-        }
-
-        protected override bool AttemptMove(int xDir, int yDir)
-        {
-            if (!base.AttemptMove(xDir, yDir)) return false;
-
-            SoundManager.Instance.RandomizeSfx(MoveClip1, MoveClip2);
-            return true;
-        }
-
-        protected override bool OnCantMove(Transform hitTransform)
-        {
-            var hitWall = hitTransform.GetComponent<Wall>();
-            if (hitWall != null)
-            {
-                hitWall.DamageWall(1);
-                _animator.SetTrigger("playerChop");
-                return true;
-            }
-            return false;
-        }
-
-        #endregion // override MovingObject
-
-        #region Proprties
-
-        public int PointsForFood
-        {
-            get { return _pointsForFood; }
-            set { _pointsForFood = value; }
-        }
-
-        public int PointsForSoda
-        {
-            get { return _pointsForSoda; }
-            set { _pointsForSoda = value; }
-        }
-
-        public float RestartLevelDelay
-        {
-            get { return _restartLevelDelay; }
-            set { _restartLevelDelay = value; }
-        }
-        
-        #endregion // Properties
+        #endregion // Unity Inspector
 
         #region Unity Methods
-
         void Update()
         {
             if (!GameManager.Instance.PlayerTurn)
@@ -86,7 +31,7 @@ namespace Assets.Scripts
             horizontal = GetHorizontalDirection();
             vertical = GetVerticalDirection();
 
-            skipTurn = ((int) Input.GetAxisRaw("SkipTurn")) > 0;
+            skipTurn = ((int)Input.GetAxisRaw("SkipTurn")) > 0;
 
             if (skipTurn)
             {
@@ -108,11 +53,68 @@ namespace Assets.Scripts
             GameManager.Instance.PlayerTurn = false;
             CheckIfGameOver();
         }
-
         #endregion // Unity Methods
 
-        #region Pubilc Methods
+        #region override MovingObject
 
+        protected override bool Move(int xDir, int yDir, out RaycastHit2D hit)
+        {
+            SoundManager.Instance.RandomizeSfx(MoveClip1, MoveClip2);
+            return base.Move(xDir, yDir, out hit);
+        }
+
+        protected override void Start ()
+        {
+            _animator = GetComponent<Animator>();
+
+            _food = GameManager.Instance.PlayerFoodPoints;
+
+            FoodText.text = "Food: " + _food;
+        
+            base.Start();
+        }
+
+        protected override bool OnCantMove(Transform hitTransform)
+        {
+            var hitWall = hitTransform.GetComponent<Wall>();
+            if (hitWall != null)
+            {
+                hitWall.DamageWall(1);
+                _animator.SetTrigger("playerChop");
+                return true;
+            }
+            var hitEnemy = hitTransform.GetComponent<Enemy>();
+            if (hitEnemy != null)
+            {
+                hitEnemy.DamageEnemy(1);
+                _animator.SetTrigger("playerChop");
+                return true;
+            }
+            return false;
+        }
+        #endregion // override MovingObject
+
+        #region Proprties
+        public int PointsForFood
+        {
+            get { return _pointsForFood; }
+            set { _pointsForFood = value; }
+        }
+
+        public int PointsForSoda
+        {
+            get { return _pointsForSoda; }
+            set { _pointsForSoda = value; }
+        }
+
+        public float RestartLevelDelay
+        {
+            get { return _restartLevelDelay; }
+            set { _restartLevelDelay = value; }
+        }
+        #endregion // Properties
+
+        #region Pubilc Methods
         public void LostFood(int loss)
         {
             _animator.SetTrigger("playerHit");
@@ -130,11 +132,9 @@ namespace Assets.Scripts
             SoundManager.Instance.MusicSource.Stop();
             GameManager.Instance.GameOver();
         }
-
         #endregion // Public Methods
 
         #region Private Methods
-
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (other.tag == "Exit")
@@ -203,18 +203,15 @@ namespace Assets.Scripts
             }
             return vertical;
         }
-
         #endregion // Private Methods
 
         #region Fields
-
         private Animator _animator;
         private int _food;
         private int _pointsForFood = 10;
         private int _pointsForSoda = 20;
 
         private float _restartLevelDelay = 1f;
-
         #endregion // Fields
     }
 }
