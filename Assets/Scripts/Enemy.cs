@@ -18,28 +18,33 @@ namespace Assets.Scripts
             base.Start();
         }
 
-        protected override void AttemptMove<T>(int xDir, int yDir, bool skipTurn = false)
+        protected override bool AttemptMove(int xDir, int yDir)
         {
-            if (skipTurn)
-            {
-                return;
-            }
             if (_skipMove)
             {
                 _skipMove = false;
-                return;
+                return true;
             }
-            base.AttemptMove<T>(xDir, yDir);
+            if (base.AttemptMove(xDir, yDir))
+            {
+                _skipMove = true;
+                return true;
+            }
 
-            _skipMove = true;
+            return false;
         }
 
-        protected override void OnCantMove<T>(T component)
+        protected override bool OnCantMove(Transform hitTransform)
         {
-            var hitPlayer = component as Player;
-            _animator.SetTrigger("enemyAttack");
-            SoundManager.Instance.RandomizeSfx(enemyAttack1, enemyAttack2);
-            hitPlayer.LostFood(PlayerDamage);
+            var hitPlayer = hitTransform.GetComponent<Player>();
+            if (hitPlayer != null)
+            {
+                _animator.SetTrigger("enemyAttack");
+                SoundManager.Instance.RandomizeSfx(enemyAttack1, enemyAttack2);
+                hitPlayer.LostFood(PlayerDamage);
+                return true;
+            }
+            return false;
         }
 
         public void MoveEnemy()
@@ -55,7 +60,7 @@ namespace Assets.Scripts
                 yDir = _target.position.y > transform.position.y ? 1 : -1;
             }
 
-            AttemptMove<Player>(xDir, yDir);
+            AttemptMove(xDir, yDir);
         }
 
         private Animator _animator;

@@ -27,31 +27,24 @@ namespace Assets.Scripts
             base.Start();
         }
 
-        protected override void AttemptMove<T>(int xDir, int yDir, bool skipTurn = false)
+        protected override bool AttemptMove(int xDir, int yDir)
         {
-            _food--;
-            FoodText.text = "Food: " + _food;
+            if (!base.AttemptMove(xDir, yDir)) return false;
 
-            base.AttemptMove<T>(xDir, yDir, skipTurn);
-
-            RaycastHit2D hit;
-
-            if (!skipTurn && Move(xDir, yDir, out hit))
-            {
-                SoundManager.Instance.RandomizeSfx(MoveClip1, MoveClip2);
-            }
-
-            CheckIfGameOver();
-
-            GameManager.Instance.PlayerTurn = false;
+            SoundManager.Instance.RandomizeSfx(MoveClip1, MoveClip2);
+            return true;
         }
 
-        protected override void OnCantMove<T>(T component)
+        protected override bool OnCantMove(Transform hitTransform)
         {
-            var hitWall = component as Wall;
-            hitWall.DamageWall(1);
-
-            _animator.SetTrigger("playerChop");
+            var hitWall = hitTransform.GetComponent<Wall>();
+            if (hitWall != null)
+            {
+                hitWall.DamageWall(1);
+                _animator.SetTrigger("playerChop");
+                return true;
+            }
+            return false;
         }
 
         #endregion // override MovingObject
@@ -94,11 +87,26 @@ namespace Assets.Scripts
             vertical = GetVerticalDirection();
 
             skipTurn = ((int) Input.GetAxisRaw("SkipTurn")) > 0;
-            
-            if (horizontal != 0 || vertical != 0 || skipTurn)
+
+            if (skipTurn)
             {
-                AttemptMove<Wall>(horizontal, vertical, skipTurn);
+                DoEveryTurnActions();
+                return;
             }
+
+            if (horizontal == 0 && vertical == 0) return;
+            if (AttemptMove(horizontal, vertical))
+            {
+                DoEveryTurnActions();
+            }
+        }
+
+        private void DoEveryTurnActions()
+        {
+            _food--;
+            FoodText.text = "Food: " + _food;
+            GameManager.Instance.PlayerTurn = false;
+            CheckIfGameOver();
         }
 
         #endregion // Unity Methods

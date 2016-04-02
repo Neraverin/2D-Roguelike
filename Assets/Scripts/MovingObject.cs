@@ -52,30 +52,23 @@ namespace Assets.Scripts
             }
         }
 
-        protected virtual void AttemptMove <T> (int xDir, int yDir, bool skipTurn = false)
-            where T : Component
+        protected virtual bool AttemptMove(int xDir, int yDir)
         {
-            if (skipTurn)
-            {
-                return;
-            }
-
             RaycastHit2D hit;
             var canMove = Move(xDir, yDir, out hit);
 
             if (hit.transform == null)
             {
-                return;
+                return true;
             }
-            var hitComponent = hit.transform.GetComponent<T>();
 
-            if (!canMove && hitComponent != null)
+            if (!canMove && hit.transform != null)
             {
-                OnCantMove(hitComponent);
+                return OnCantMove(hit.transform);
             }
+            return true;
         }
 
-        protected abstract void OnCantMove <T>(T component)
-            where T : Component;
+        protected abstract bool OnCantMove (Transform hitTransform);
     }
 }
