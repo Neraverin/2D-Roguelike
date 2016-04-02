@@ -52,9 +52,14 @@ namespace Assets.Scripts
             }
         }
 
-        protected virtual void AttemptMove <T> (int xDir, int yDir)
+        protected virtual void AttemptMove <T> (int xDir, int yDir, bool skipTurn = false)
             where T : Component
         {
+            if (skipTurn)
+            {
+                return;
+            }
+
             RaycastHit2D hit;
             var canMove = Move(xDir, yDir, out hit);
 

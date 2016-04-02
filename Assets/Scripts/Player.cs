@@ -27,16 +27,16 @@ namespace Assets.Scripts
             base.Start();
         }
 
-        protected override void AttemptMove<T>(int xDir, int yDir)
+        protected override void AttemptMove<T>(int xDir, int yDir, bool skipTurn = false)
         {
             _food--;
             FoodText.text = "Food: " + _food;
 
-            base.AttemptMove<T>(xDir, yDir);
+            base.AttemptMove<T>(xDir, yDir, skipTurn);
 
             RaycastHit2D hit;
 
-            if (Move(xDir, yDir, out hit))
+            if (!skipTurn && Move(xDir, yDir, out hit))
             {
                 SoundManager.Instance.RandomizeSfx(MoveClip1, MoveClip2);
             }
@@ -88,13 +88,16 @@ namespace Assets.Scripts
             }
             var horizontal = 0;
             var vertical = 0;
+            var skipTurn = false;
 
             horizontal = GetHorizontalDirection();
             vertical = GetVerticalDirection();
+
+            skipTurn = ((int) Input.GetAxisRaw("SkipTurn")) > 0;
             
-            if (horizontal != 0 || vertical != 0)
+            if (horizontal != 0 || vertical != 0 || skipTurn)
             {
-                AttemptMove<Wall>(horizontal, vertical);
+                AttemptMove<Wall>(horizontal, vertical, skipTurn);
             }
         }
 

@@ -18,8 +18,12 @@ namespace Assets.Scripts
             base.Start();
         }
 
-        protected override void AttemptMove<T>(int xDir, int yDir)
+        protected override void AttemptMove<T>(int xDir, int yDir, bool skipTurn = false)
         {
+            if (skipTurn)
+            {
+                return;
+            }
             if (_skipMove)
             {
                 _skipMove = false;
