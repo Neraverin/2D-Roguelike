@@ -8,7 +8,6 @@ namespace Assets.Scripts
 {
     public class BoardManager : MonoBehaviour
     {
-
         [Serializable]
         public class Count
         {
@@ -22,8 +21,8 @@ namespace Assets.Scripts
             }
         }
 
-        public int Columns = 8;
-        public int Rows = 8;
+        public int Columns = 16;
+        public int Rows = 16;
         public Count WallCount = new Count(5, 9);
         public Count FoodCount = new Count(1, 5);
         public GameObject Exit;
