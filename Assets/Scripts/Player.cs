@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Assets.Scripts
@@ -15,7 +16,7 @@ namespace Assets.Scripts
         public AudioClip GameOverClip;
 
         public Text FoodText;
-        #endregion // Unity Inspector
+        #endregion Unity Inspector
 
         #region Unity Methods
         void Update()
@@ -24,14 +25,11 @@ namespace Assets.Scripts
             {
                 return;
             }
-            var horizontal = 0;
-            var vertical = 0;
-            var skipTurn = false;
 
-            horizontal = GetHorizontalDirection();
-            vertical = GetVerticalDirection();
+            var horizontal = GetHorizontalDirection();
+            var vertical = GetVerticalDirection();
 
-            skipTurn = ((int)Input.GetAxisRaw("SkipTurn")) > 0;
+            var skipTurn = ((int)Input.GetAxisRaw("SkipTurn")) > 0;
 
             if (skipTurn)
             {
@@ -53,7 +51,7 @@ namespace Assets.Scripts
             GameManager.Instance.PlayerTurn = false;
             CheckIfGameOver();
         }
-        #endregion // Unity Methods
+        #endregion Unity Methods
 
         #region override MovingObject
 
@@ -94,7 +92,7 @@ namespace Assets.Scripts
             }
             return false;
         }
-        #endregion // override MovingObject
+        #endregion override MovingObject
 
         #region Proprties
         public int PointsForFood
@@ -137,11 +135,14 @@ namespace Assets.Scripts
         #endregion // Public Methods
 
         #region Private Methods
-        private void OnTriggerEnter2D(Collider2D other)
+        private void OnTriggerEnter2D(Component other)
         {
             if (other.tag == "Exit")
             {
-                GameManager.Instance.PlayerHealthPoints = _hp;
+                if (_hp > 0)
+                {
+                    GameManager.Instance.PlayerHealthPoints = _hp;
+                }
                 Invoke("Restart", _restartLevelDelay);
                 enabled = false;
             }
@@ -168,7 +169,8 @@ namespace Assets.Scripts
 
         private void Restart()
         {
-            Application.LoadLevel(Application.loadedLevel);
+            GameManager.Instance.IncrementLevel();
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
         private int GetHorizontalDirection()

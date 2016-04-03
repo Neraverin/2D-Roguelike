@@ -4,11 +4,15 @@ namespace Assets.Scripts
 {
     public class Wall : MonoBehaviour
     {
+        #region Unity Inspector
+
         public Sprite DamageSprite;
         public int Hp = 4;
 
         public AudioClip ChopClip1;
         public AudioClip ChopClip2;
+
+        #endregion Unity Inspector
 
         void Awake ()
         {

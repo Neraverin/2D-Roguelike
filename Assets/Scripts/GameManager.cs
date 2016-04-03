@@ -28,6 +28,8 @@ namespace Assets.Scripts
             else if (Instance != this)
             {
                 Destroy(gameObject);
+                GameManager.Instance.InitGame();
+                return;
             }
             DontDestroyOnLoad(gameObject);
 
@@ -41,11 +43,16 @@ namespace Assets.Scripts
         {
             _doingSetup = true;
 
-            _levelImage = GameObject.Find("LevelImage");
-            _levelText = GameObject.Find("LevelText").GetComponent<Text>();
+            if (_levelImage == null)
+                _levelImage = GameObject.Find("LevelImage");
+            if (_levelText == null)
+                _levelText = GameObject.Find("LevelText").GetComponent<Text>();
             _levelText.text = "Day: " + _level;
             _levelImage.SetActive(true);
             Invoke("HideLevelImage", LevelStartDelay);
+
+            if (_enemies == null)
+                _enemies = new List<Enemy>();
 
             _enemies.Clear();
             BoardScript.SetupScene(_level);
@@ -84,11 +91,9 @@ namespace Assets.Scripts
             _enemiesMoving = false;
         }
 
-        private void OnLevelWasLoaded(int index)
+        public void IncrementLevel()
         {
             _level++;
-
-            InitGame();
         }
 
         private void HideLevelImage()

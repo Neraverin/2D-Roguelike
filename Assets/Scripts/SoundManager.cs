@@ -4,6 +4,8 @@ namespace Assets.Scripts
 {
     public class SoundManager : MonoBehaviour
     {
+        #region Unity Inspector
+
         public AudioSource EfxSource;
         public AudioSource MusicSource;
 
@@ -11,6 +13,8 @@ namespace Assets.Scripts
 
         public float LowPitchRange = 0.95f;
         public float HighPitchRange = 1.05f;
+
+        #endregion Unity Inspector
 
         void Awake ()
         {

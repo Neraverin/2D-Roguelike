@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
-    public abstract class MovingObject : MonoBehaviour {
-
+    public abstract class MovingObject : MonoBehaviour
+    {
         public float MoveTime = 0.1f;
         public LayerMask BlockingLayer;
 
@@ -28,15 +28,9 @@ namespace Assets.Scripts
             hit = Physics2D.Linecast(start, end, BlockingLayer);
             _boxCollider.enabled = true;
 
-            if (hit.transform == null)
-            {
-                StartCoroutine(SmoothMovement (end));
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            if (hit.transform != null) return false;
+            StartCoroutine(SmoothMovement (end));
+            return true;
         }
 
         protected IEnumerator SmoothMovement(Vector3 end)

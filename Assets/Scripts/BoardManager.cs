@@ -21,7 +21,7 @@ namespace Assets.Scripts
             }
         }
 
-        public int Columns = 16;
+        public int Columns = 20;
         public int Rows = 16;
         public Count WallCount = new Count(5, 9);
         public Count FoodCount = new Count(1, 5);
