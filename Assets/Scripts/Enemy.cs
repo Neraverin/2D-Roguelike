@@ -26,22 +26,6 @@ namespace Assets.Scripts
         #endregion //Unity Methods
 
         #region MovingObject
-        protected override bool AttemptMove(int xDir, int yDir)
-        {
-            if (_skipMove)
-            {
-                _skipMove = false;
-                return true;
-            }
-            if (base.AttemptMove(xDir, yDir))
-            {
-                _skipMove = true;
-                return true;
-            }
-
-            return false;
-        }
-
         protected override bool OnCantMove(Transform hitTransform)
         {
             var hitPlayer = hitTransform.GetComponent<Player>();
@@ -88,7 +72,6 @@ namespace Assets.Scripts
         #region Fields
         private Animator _animator;
         private Transform _target;
-        private bool _skipMove;
         private int _hp = 3;
 
         #endregion Fields

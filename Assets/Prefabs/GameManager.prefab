@@ -41,7 +41,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BoardScript: {fileID: 0}
-  PlayerFoodPoints: 100
+  PlayerHealthPoints: 100
   TurnDelay: 0.1
   LevelStartDelay: 2
   PlayerTurn: 1
@@ -56,11 +56,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53266d93e5fc41b4ab8107b797f73e2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Columns: 8
-  Rows: 8
+  Columns: 20
+  Rows: 16
   WallCount:
-    Minimum: 5
-    Maximum: 9
+    Minimum: 15
+    Maximum: 19
   FoodCount:
     Minimum: 1
     Maximum: 5

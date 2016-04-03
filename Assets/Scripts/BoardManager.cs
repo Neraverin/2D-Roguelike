@@ -23,7 +23,7 @@ namespace Assets.Scripts
 
         public int Columns = 20;
         public int Rows = 16;
-        public Count WallCount = new Count(5, 9);
+        public Count WallCount = new Count(15, 29);
         public Count FoodCount = new Count(1, 5);
         public GameObject Exit;
         public GameObject[] FloorTiles;
@@ -95,7 +95,7 @@ namespace Assets.Scripts
             InitializeList();
             LayoutObjectAtRandom(WallTiles, WallCount.Minimum, WallCount.Maximum);
             LayoutObjectAtRandom(FoodTiles, FoodCount.Minimum, FoodCount.Maximum);
-            var enemyCount = (int)Math.Log(level, 2f);
+            var enemyCount = (int)Math.Log(level, 2f)*level;
             LayoutObjectAtRandom(EnemyTiles, enemyCount, enemyCount);
             Instantiate(Exit, new Vector3(Columns - 1, Rows - 1, 0f), Quaternion.identity);
         }
