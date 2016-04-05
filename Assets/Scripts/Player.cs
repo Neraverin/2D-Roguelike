@@ -1,10 +1,12 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Assets.Scripts
 {
-    public class Player : MovingObject
+    public class Player : MovingObject, IPointerEnterHandler
     {
         #region Unity Inspector
         public AudioClip MoveClip1;
@@ -176,6 +178,10 @@ namespace Assets.Scripts
         private int GetHorizontalDirection()
         {
             var horizontal = 0;
+            var mousePosition = Input.mousePosition;
+            mousePosition.z = 10;
+            var diffPosition = Camera.main.ScreenToWorldPoint(mousePosition) - transform.position;
+
             if ((int)Input.GetAxisRaw("Horizontal") > 0 ||
                 (int)Input.GetAxisRaw("UpAndRight") > 0 ||
                 (int)Input.GetAxisRaw("UpAndLeft") < 0)
@@ -188,12 +194,28 @@ namespace Assets.Scripts
             {
                 horizontal = -1;
             }
+            if (Input.GetMouseButton(0))
+            {
+                if (diffPosition.x > 0.3)
+                {
+                    horizontal = 1;
+                }
+                else if (diffPosition.x < -0.3)
+                {
+                    horizontal = -1;
+                }
+            }
+
             return horizontal;
         }
 
         private int GetVerticalDirection()
         {
             var vertical = 0;
+            var mousePosition = Input.mousePosition;
+            mousePosition.z = 10;
+            var diffPosition = Camera.main.ScreenToWorldPoint(mousePosition) - transform.position;
+
             if ((int)Input.GetAxisRaw("Vertical") > 0 ||
                 (int)Input.GetAxisRaw("UpAndRight") > 0 ||
                 (int)Input.GetAxisRaw("UpAndLeft") > 0)
@@ -206,6 +228,18 @@ namespace Assets.Scripts
             {
                 vertical = -1;
             }
+            if (Input.GetMouseButton(0))
+            {
+                if (diffPosition.y > 0.3)
+                {
+                    vertical = 1;
+                }
+                else if (diffPosition.y < -0.3)
+                {
+                    vertical = -1;
+                }
+            }
+
             return vertical;
         }
 
@@ -213,6 +247,11 @@ namespace Assets.Scripts
         {
             FoodText.text = " Food:" + _hp;
             _healthBar.SetHealth(_hp);
+        }
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            throw new NotImplementedException();
         }
         #endregion // Private Methods
 

@@ -21,6 +21,8 @@ namespace Assets.Scripts
             }
         }
 
+        #region Unity Inspector
+
         public int Columns = 20;
         public int Rows = 16;
         public Count WallCount = new Count(15, 29);
@@ -32,9 +34,10 @@ namespace Assets.Scripts
         public GameObject[] EnemyTiles;
         public GameObject[] OuterwallTiles;
 
-        private Transform _boardHolder;
+        #endregion
 
-        private readonly List<Vector3> _gridPositions = new List<Vector3>();
+
+
 
         void InitializeList()
         {
@@ -89,15 +92,31 @@ namespace Assets.Scripts
             }
         }
 
+        #region Public Methods
+
+        public void ShowTooltip(Vector3 tooltipPosition, MonoBehaviour item)
+        {
+            GameManager.Instance.Tooltip.SetActive(true);
+        }
+
         public void SetupScene(int level)
         {
             BoardSetup();
             InitializeList();
             LayoutObjectAtRandom(WallTiles, WallCount.Minimum, WallCount.Maximum);
             LayoutObjectAtRandom(FoodTiles, FoodCount.Minimum, FoodCount.Maximum);
-            var enemyCount = (int)Math.Log(level, 2f)*level;
+            var enemyCount = (int)Math.Log(level, 2f) * level;
             LayoutObjectAtRandom(EnemyTiles, enemyCount, enemyCount);
             Instantiate(Exit, new Vector3(Columns - 1, Rows - 1, 0f), Quaternion.identity);
         }
+
+        #endregion Pyblic Methods
+
+        #region Fields
+
+        private Transform _boardHolder;
+        private readonly List<Vector3> _gridPositions = new List<Vector3>();
+
+        #endregion Fields
     }
 }

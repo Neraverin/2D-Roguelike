@@ -19,6 +19,8 @@ namespace Assets.Scripts
 
         [HideInInspector] public bool PlayerTurn = true;
 
+        public GameObject Tooltip;
+
         void Awake () 
         {
             if (Instance == null)
@@ -47,6 +49,8 @@ namespace Assets.Scripts
                 _levelImage = GameObject.Find("LevelImage");
             if (_levelText == null)
                 _levelText = GameObject.Find("LevelText").GetComponent<Text>();
+            if (Tooltip == null)
+                Tooltip = GameObject.Find("Tooltip");
             _levelText.text = "Day: " + _level;
             _levelImage.SetActive(true);
             Invoke("HideLevelImage", LevelStartDelay);

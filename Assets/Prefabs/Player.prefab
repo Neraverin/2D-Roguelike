@@ -13,6 +13,7 @@ GameObject:
   - 61: {fileID: 6111702}
   - 50: {fileID: 5061808}
   - 114: {fileID: 11468096}
+  - 114: {fileID: 11494030}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -95,18 +96,27 @@ MonoBehaviour:
   BlockingLayer:
     serializedVersion: 2
     m_Bits: 256
-  WallDamage: 1
-  PointsForFood: 10
-  PointsForSoda: 20
-  RestartLevelDelay: 1
+  MoveClip1: {fileID: 8300000, guid: 892962212a4b74d1c9f578a3b6ea6439, type: 3}
+  MoveClip2: {fileID: 8300000, guid: a826bc3d758db43d6ae9caf415b63d1d, type: 3}
+  EatClip1: {fileID: 8300000, guid: 1cb61f83d60374c7389bb547431919e3, type: 3}
+  EatClip2: {fileID: 8300000, guid: 062161c1897a54088a5430f8c197e1b8, type: 3}
+  DrinkClip1: {fileID: 8300000, guid: b6b608537288246c9a464915db27bf52, type: 3}
+  DrinkClip2: {fileID: 8300000, guid: bcb9dda73ee914d3e8f252895f73f461, type: 3}
+  GameOverClip: {fileID: 8300000, guid: e2beefeb2273f4efe992adf5b8d67c29, type: 3}
   FoodText: {fileID: 0}
-  MoveClip1: {fileID: 0}
-  MoveClip2: {fileID: 0}
-  EatClip1: {fileID: 0}
-  EatClip2: {fileID: 0}
-  DrinkClip1: {fileID: 0}
-  DrinkClip2: {fileID: 0}
-  GameOverClip: {fileID: 0}
+--- !u!114 &11494030
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 157498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99a2697d75f35d344afc41ec06653386, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HealthBar: {fileID: 0}
+  HealthText: {fileID: 0}
 --- !u!212 &21245728
 SpriteRenderer:
   m_ObjectHideFlags: 1

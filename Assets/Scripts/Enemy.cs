@@ -1,8 +1,11 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using UnityEngine.Assertions.Must;
+using UnityEngine.EventSystems;
 
 namespace Assets.Scripts
 {
-    public class Enemy : MovingObject
+    public class Enemy : MovingObject, IPointerEnterHandler, IPointerDownHandler
     {
         #region Unity Inspector
         public int PlayerDamage;
@@ -12,6 +15,7 @@ namespace Assets.Scripts
 
         public AudioClip Attacked1;
         public AudioClip Attacked2;
+
         #endregion // Unity Inspector
 
         #region Unity Methods
@@ -22,6 +26,12 @@ namespace Assets.Scripts
             _target = GameObject.FindGameObjectWithTag("Player").transform;
 
             base.Start();
+        }
+
+        public void OnPointerEnter(PointerEventData data)
+        {
+            var gameManager = GetComponent<GameManager>();
+            gameManager.BoardScript.ShowTooltip(this.GetComponent<RectTransform>().localPosition, this);
         }
         #endregion //Unity Methods
 
@@ -66,6 +76,16 @@ namespace Assets.Scripts
             {
                 gameObject.SetActive(false);
             }
+        }
+
+        public void OnMouseEnter()
+        {
+            GameManager.Instance.BoardScript.ShowTooltip(transform.localPosition, this);
+        }
+
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            throw new NotImplementedException();
         }
         #endregion // Public Methods
 
