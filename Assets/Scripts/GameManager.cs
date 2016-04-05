@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using SmartLocalization;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -43,6 +45,7 @@ namespace Assets.Scripts
 
         void InitGame()
         {
+            LanguageManager.Instance.ChangeLanguage("ru");
             _doingSetup = true;
 
             if (_levelImage == null)
@@ -51,7 +54,7 @@ namespace Assets.Scripts
                 _levelText = GameObject.Find("LevelText").GetComponent<Text>();
             if (Tooltip == null)
                 Tooltip = GameObject.Find("Tooltip");
-            _levelText.text = "Day: " + _level;
+            _levelText.text = LanguageManager.Instance.GetTextValue("Day") + _level;
             _levelImage.SetActive(true);
             Invoke("HideLevelImage", LevelStartDelay);
 
@@ -64,7 +67,7 @@ namespace Assets.Scripts
 
         public void GameOver()
         {
-            _levelText.text = "After " + _level + " number of days you died.";
+            _levelText.text = String.Format(LanguageManager.Instance.GetTextValue("GameOver"), _level);
             _levelImage.SetActive(true);
             enabled = false;
         }

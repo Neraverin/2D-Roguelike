@@ -1,4 +1,5 @@
 ﻿using System;
+using SmartLocalization;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -245,7 +246,7 @@ namespace Assets.Scripts
 
         private void UpdateHealthPoints()
         {
-            FoodText.text = " Food:" + _hp;
+            FoodText.text = LanguageManager.Instance.GetTextValue("Food") + _hp;
             _healthBar.SetHealth(_hp);
         }
 
